@@ -1,0 +1,496 @@
+<title>Identity Change Request Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: control bar over a two-column stage — the animated flowchart on the left, the live RITM record on the right; stacks on phones. */
+:root {
+  --bg: #f2f5f7;
+  --surface: #ffffff;
+  --lane: #e9eef2;
+  --ink: #15212c;
+  --muted: #5a6876;
+  --line: #c3ccd5;
+  --accent: #0b7a84;
+  --accent-soft: rgba(11, 122, 132, 0.12);
+  --tines: #4a56c9;
+  --tines-soft: rgba(74, 86, 201, 0.12);
+  --good: #2a7f48;
+  --bad: #be3a2f;
+  --bad-soft: rgba(190, 58, 47, 0.10);
+  --flash: rgba(11, 122, 132, 0.16);
+  --display: "IBM Plex Sans Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e141a; --surface: #151e27; --lane: #18222c; --ink: #e5ecf2; --muted: #93a1af; --line: #33414e;
+    --accent: #3fc3cd; --accent-soft: rgba(63, 195, 205, 0.14); --tines: #8f99f4; --tines-soft: rgba(143, 153, 244, 0.14);
+    --good: #5ec784; --bad: #f0705f; --bad-soft: rgba(240, 112, 95, 0.12); --flash: rgba(63, 195, 205, 0.18);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e141a; --surface: #151e27; --lane: #18222c; --ink: #e5ecf2; --muted: #93a1af; --line: #33414e;
+  --accent: #3fc3cd; --accent-soft: rgba(63, 195, 205, 0.14); --tines: #8f99f4; --tines-soft: rgba(143, 153, 244, 0.14);
+  --good: #5ec784; --bad: #f0705f; --bad-soft: rgba(240, 112, 95, 0.12); --flash: rgba(63, 195, 205, 0.18);
+  color-scheme: dark;
+}
+
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 40px; display: grid; gap: 20px; }
+
+header { display: grid; gap: 6px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--display); font-weight: 600; font-size: clamp(26px, 4vw, 36px); line-height: 1.1; margin: 0; text-wrap: balance; }
+.lede { margin: 0; color: var(--muted); max-width: 68ch; }
+
+.controls { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; }
+.scenarios { display: flex; flex-wrap: wrap; gap: 6px; }
+.scenarios button, .playback button {
+  font: 500 13px/1 var(--body); color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 6px; padding: 9px 12px; cursor: pointer;
+}
+.scenarios button[aria-checked="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.playback { display: flex; gap: 6px; align-items: center; }
+.playback button { min-width: 40px; }
+.playback .primary { background: var(--accent); color: var(--surface); border-color: var(--accent); min-width: 84px; }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button:disabled { opacity: 0.45; cursor: default; }
+.scenario-note { margin: -8px 0 0; font-size: 13px; color: var(--muted); }
+
+.progress { height: 3px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.progress span { display: block; height: 100%; width: 0; background: var(--accent); transition: width 300ms ease; }
+
+.main { display: grid; gap: 20px; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); align-items: start; }
+.stage { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px; min-width: 0; }
+.scroller { overflow-x: auto; }
+svg.flow { display: block; width: 100%; min-width: 600px; height: auto; }
+
+.panel { display: grid; gap: 16px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); min-width: 0; }
+.step { display: grid; gap: 8px; }
+.step-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.chip { font: 500 11px/1 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 8px; border-radius: 4px; background: var(--accent-soft); color: var(--accent); }
+.chip.tines { background: var(--tines-soft); color: var(--tines); }
+.chip.people { background: var(--lane); color: var(--ink); }
+.counter { font: 400 12px var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.step h2 { font-family: var(--display); font-weight: 600; font-size: 24px; line-height: 1.15; margin: 0; text-wrap: balance; }
+.step h2.bad { color: var(--bad); }
+.step p { margin: 0; max-width: 60ch; }
+.example { font-family: var(--mono); font-size: 12.5px; background: var(--lane); border-radius: 6px; padding: 8px 10px; color: var(--ink); overflow-wrap: anywhere; }
+
+.ritm { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.ritm-head { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; padding: 12px 14px; border-bottom: 1px solid var(--line); background: var(--lane); }
+.ritm-head strong { font-family: var(--mono); font-weight: 500; font-size: 14px; }
+.ritm-head span { font-size: 12.5px; color: var(--muted); }
+.ritm dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); }
+.ritm dt, .ritm dd { padding: 9px 14px; border-bottom: 1px solid var(--line); margin: 0; transition: background 600ms ease; }
+.ritm dl > :nth-last-child(-n+2) { border-bottom: 0; }
+.ritm dt { font: 400 12px var(--mono); color: var(--muted); }
+.ritm dd { font-size: 13.5px; font-weight: 500; overflow-wrap: anywhere; }
+.ritm .flash { background: var(--flash); }
+.ritm dd.bad { color: var(--bad); }
+.ritm dd.good { color: var(--good); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 14px; padding: 10px 4px 2px; font-size: 12px; color: var(--muted); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 6px; border: 1.5px solid var(--line); background: var(--surface); }
+.legend .l-active { border-color: var(--accent); background: var(--accent-soft); }
+.legend .l-done { border-color: var(--accent); }
+
+/* SVG */
+.lane-box { fill: var(--lane); stroke: none; }
+.lane-name { fill: var(--muted); font: 600 12px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.node rect, .node polygon { fill: var(--surface); stroke: var(--line); stroke-width: 1.25; transition: fill 250ms, stroke 250ms; }
+.node .t { fill: var(--ink); font: 600 13px var(--body); }
+.node .s { fill: var(--muted); font: 400 11.5px var(--body); }
+.node.done rect, .node.done polygon { stroke: var(--accent); }
+.node.tines.done rect { stroke: var(--tines); }
+.node.active rect, .node.active polygon { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2.25; }
+.node.tines.active rect { fill: var(--tines-soft); stroke: var(--tines); }
+.node.badnode.active rect, .node.badnode.active polygon, .node.badout.active polygon { fill: var(--bad-soft); stroke: var(--bad); }
+.halo { fill: none; stroke: var(--accent); stroke-width: 2; opacity: 0; }
+.node.active .halo { animation: pulse 1.6s ease-out infinite; }
+.node.tines .halo { stroke: var(--tines); }
+.node.badnode .halo, .node.badout .halo { stroke: var(--bad); }
+@keyframes pulse { 0% { opacity: 0.55; transform: scale(1); } 100% { opacity: 0; transform: scale(1.08); } }
+.halo { transform-box: fill-box; transform-origin: center; }
+.edge { fill: none; stroke: var(--line); stroke-width: 1.5; }
+.edge.walked { stroke: var(--accent); }
+.trail { fill: none; stroke: var(--accent); stroke-width: 2.5; }
+.arrow-muted { fill: var(--line); }
+.arrow-accent { fill: var(--accent); }
+.lbl { fill: var(--muted); font: 500 11.5px var(--mono); }
+.token { fill: var(--accent); stroke: var(--surface); stroke-width: 3; opacity: 0; }
+
+@media (max-width: 900px) {
+  .main { grid-template-columns: minmax(0, 1fr); }
+  .panel { position: static; order: -1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .node.active .halo { animation: none; }
+  .progress span, .ritm dt, .ritm dd { transition: none; }
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">ServiceNow → Tines → Identity Security Cloud</div>
+    <h1>Identity change request, from submission to apply</h1>
+    <p class="lede">Follow one Service Request through the flow. Pick a scenario, press Play, or step through it. The record on the right shows what changes on the RITM at each step.</p>
+  </header>
+
+  <div class="controls">
+    <div class="scenarios" role="radiogroup" aria-label="Scenario">
+      <button type="button" role="radio" id="sc-happy" data-s="happy" aria-checked="true">Clean run</button>
+      <button type="button" role="radio" id="sc-badFile" data-s="badFile" aria-checked="false">File rejected</button>
+      <button type="button" role="radio" id="sc-dryFail" data-s="dryFail" aria-checked="false">Dry run fails</button>
+      <button type="button" role="radio" id="sc-rejected" data-s="rejected" aria-checked="false">Approval rejected</button>
+    </div>
+    <div class="playback">
+      <button type="button" id="btn-restart" aria-label="Restart">⟲</button>
+      <button type="button" id="btn-back" aria-label="Previous step">←</button>
+      <button type="button" id="btn-play" class="primary">Play</button>
+      <button type="button" id="btn-next" aria-label="Next step">→</button>
+    </div>
+  </div>
+  <p class="scenario-note" id="scenarioNote"></p>
+  <div class="progress" aria-hidden="true"><span id="progress"></span></div>
+
+  <div class="main">
+    <div class="stage">
+      <div class="scroller">
+        <svg class="flow" id="flow" viewBox="0 40 760 846" role="img" aria-label="Flowchart of the identity change request, with the current step highlighted">
+          <defs>
+            <marker id="arr-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="arrow-muted" d="M0 0L10 5L0 10z"/></marker>
+            <marker id="arr-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="arrow-accent" d="M0 0L10 5L0 10z"/></marker>
+          </defs>
+          <rect class="lane-box" x="12" y="48" width="500" height="828" rx="8"/>
+          <text class="lane-name" x="28" y="72">ServiceNow</text>
+          <rect class="lane-box" x="528" y="48" width="222" height="828" rx="8"/>
+          <text class="lane-name" x="544" y="72">Tines</text>
+          <g id="edges"></g>
+          <g id="trails"></g>
+          <g id="labels">
+            <text class="lbl" x="280" y="290" text-anchor="middle">no</text>
+            <text class="lbl" x="388" y="362">yes</text>
+            <text class="lbl" x="150" y="192" text-anchor="middle">corrected file</text>
+            <text class="lbl" x="518" y="396" text-anchor="middle">dry_run</text>
+            <text class="lbl" x="647" y="474">plan + status</text>
+            <text class="lbl" x="230" y="496" text-anchor="middle">no: back to requester</text>
+            <text class="lbl" x="388" y="568">yes</text>
+            <text class="lbl" x="280" y="702" text-anchor="middle">no</text>
+            <text class="lbl" x="388" y="774">yes</text>
+            <text class="lbl" x="518" y="808" text-anchor="middle">apply</text>
+          </g>
+          <g id="nodes"></g>
+          <circle class="token" id="token" r="7" cx="0" cy="0"/>
+        </svg>
+      </div>
+      <div class="legend">
+        <span><i class="l-active"></i>Current step</span>
+        <span><i class="l-done"></i>Already passed</span>
+        <span><i></i>Not reached</span>
+      </div>
+    </div>
+
+    <aside class="panel" aria-live="polite">
+      <div class="step">
+        <div class="step-meta"><span class="chip" id="lane">ServiceNow</span><span class="counter" id="counter"></span></div>
+        <h2 id="stepTitle"></h2>
+        <p id="stepBody"></p>
+        <div class="example" id="stepExample" hidden></div>
+      </div>
+      <div class="ritm">
+        <div class="ritm-head"><strong>RITM0012345</strong><span>app_owner_update · source Workday · example</span></div>
+        <dl id="ritm">
+          <dt>State</dt><dd id="f-state"></dd>
+          <dt>Assignment group</dt><dd id="f-group"></dd>
+          <dt>u_automation_status</dt><dd id="f-auto"></dd>
+          <dt>Approval</dt><dd id="f-approval"></dd>
+          <dt>u_validated_attachment</dt><dd id="f-file"></dd>
+        </dl>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function () {
+  const NS = 'http://www.w3.org/2000/svg';
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const N = {
+    submit:   { x: 380, y: 112, w: 236, h: 56, lane: 'Requester', t: 'Requester submits request', s: 'Catalog item creates RITM + CSV',
+      title: () => 'Requester submits the Service Request',
+      body: () => 'The catalog item creates the RITM with the request type, one ISC source, a justification and the CSV in the csv_file attachment variable.',
+      apply: st => { st.state = 'Open'; st.group = '—'; st.auto = '—'; st.approval = 'Not requested'; st.file = 'None yet'; } },
+    validate: { x: 380, y: 200, w: 236, h: 56, lane: 'ServiceNow', t: 'Validate file and allow list', s: 'Format, rows, size, one source',
+      title: (n, c) => c.attempt > 1 ? 'Validate the corrected file' : 'Validate the file and the allow list',
+      body: (n, c) => 'Validate CSV Attachment checks the extension, content type, header columns, row values and size. Check Allow List confirms one source per file and that every app is allow-listed for that source.' + (c.attempt > 1 ? ' Every resubmission runs the full set of checks again.' : ''),
+      apply: () => {} },
+    valid:    { x: 380, y: 298, kind: 'dia', lane: 'ServiceNow', t: 'Valid?',
+      title: n => n === 'reject' ? 'The file fails a check' : 'The file passes',
+      body: n => n === 'reject' ? 'The flow collects up to 10 problems so the requester can fix them in one go.' : 'The flow stores this attachment as the one file that will be dry-run, approved and applied, and writes a work note.',
+      example: n => n === 'reject' ? 'Missing columns: owner_email\nRow 14: "app_name" is blank' : null,
+      tone: n => n === 'reject' ? 'bad' : null,
+      apply: (st, n, c) => { if (n !== 'reject') st.file = 'owners' + (c.attempt > 1 ? '_v' + c.attempt : '') + '.csv'; } },
+    reject:   { x: 140, y: 298, w: 200, h: 56, lane: 'ServiceNow', bad: true, t: 'Return to requester', s: 'Comment errors, Pending',
+      title: () => 'Return the request to the requester',
+      body: () => 'The errors go to the requester as a comment on the RITM. The rejected file stays attached for audit and is never deleted.',
+      tone: () => 'bad',
+      apply: st => { st.state = 'Pending'; st.auto = 'Awaiting corrected file'; } },
+    wait:     { x: 140, y: 406, w: 200, h: 56, lane: 'Requester', t: 'Wait for new file', s: 'No attempt limit or timeout',
+      title: () => 'Wait for a corrected file',
+      body: () => 'The flow waits for a new attachment on the RITM. There is no attempt limit and no timeout. The requester can also cancel the request.',
+      apply: st => { st.state = 'Pending'; st.auto = 'Awaiting corrected file'; } },
+    queueDry: { x: 380, y: 406, w: 236, h: 56, lane: 'ServiceNow', t: 'Queue for Tines dry run', s: 'FIFO, one per source at a time',
+      title: () => 'Queue for the Tines dry run',
+      body: () => 'The RITM joins the queue, ordered by u_queued_at. The dispatcher sends the oldest request first and never has two requests for the same source in flight.',
+      apply: st => { st.state = 'Work in Progress'; st.group = 'IAM Automation'; st.auto = 'Dry run queued'; } },
+    tinesDry: { x: 639, y: 406, w: 200, h: 56, lane: 'Tines', tines: true, t: 'Tines dry run', s: 'Re-check, plan, no changes',
+      title: () => 'Tines runs the dry run',
+      body: () => 'Tines repeats every check, resolves each row in ISC and writes a planned-changes CSV to the RITM. Nothing changes in ISC.',
+      apply: st => { st.auto = 'Dry run sent'; } },
+    dryOk:    { x: 380, y: 504, kind: 'dia', lane: 'ServiceNow', t: 'Dry run OK?',
+      title: n => n === 'wait' ? 'The dry run finds a problem' : 'The dry run is clean',
+      body: n => n === 'wait' ? 'Tines reports the failing rows. The requester is asked for a corrected file and the request goes back through validation.' : 'The planned changes are ready for review.',
+      example: n => n === 'wait' ? 'Row 9: owner jane.tan@example.com not found in ISC' : 'Example summary: 40 will change, 2 already in place, 0 errors',
+      tone: n => n === 'wait' ? 'bad' : null,
+      apply: (st, n) => { st.auto = n === 'wait' ? 'Dry run failed' : 'Dry run complete'; if (n === 'wait') st.file = 'None (needs a new file)'; } },
+    approval: { x: 380, y: 612, w: 236, h: 56, lane: 'Approvers', t: 'Ask for approval', s: 'IAM Change Approvers group',
+      title: () => 'IAM Change Approvers review the plan',
+      body: () => 'Approvers see the request type, source, justification, row count and the planned-changes CSV. Any one member can approve. The requester cannot approve their own request.',
+      apply: st => { st.auto = 'Awaiting approval'; st.approval = 'Requested'; } },
+    approved: { x: 380, y: 710, kind: 'dia', lane: 'Approvers', t: 'Approved?',
+      title: n => n === 'closed' ? 'The approver rejects it' : 'The approver approves it',
+      body: n => n === 'closed' ? 'The rejection and its reason are recorded on the approval.' : 'The approval is recorded and the request moves on to apply.',
+      tone: n => n === 'closed' ? 'bad' : null,
+      apply: (st, n) => { st.approval = n === 'closed' ? 'Rejected' : 'Approved'; } },
+    closed:   { x: 140, y: 710, w: 200, h: 56, lane: 'ServiceNow', bad: true, t: 'Closed Incomplete', s: 'Reason sent to requester',
+      title: () => 'Close the request',
+      body: () => 'The approver’s reason goes to the requester. Nothing was changed in ISC. A change of plan needs a new request.',
+      tone: () => 'bad',
+      apply: st => { st.state = 'Closed Incomplete'; st.auto = '—'; } },
+    queueApply: { x: 380, y: 818, w: 236, h: 56, lane: 'ServiceNow', t: 'Queue for Tines apply', s: 'Same file that was approved',
+      title: () => 'Queue for apply',
+      body: () => 'The apply call carries the approval details and the same file that was dry-run and approved. A file attached after approval is ignored.',
+      apply: st => { st.auto = 'Apply queued'; } },
+    tinesApply: { x: 639, y: 818, w: 200, h: 72, lane: 'Tines', tines: true, t: 'Tines apply', s: 'Re-check, apply in ISC', s2: 'Results back to RITM',
+      title: () => 'Tines applies the change in ISC',
+      body: () => 'Tines checks the approval again, applies each row in ISC, attaches a results CSV and closes the RITM.',
+      apply: st => { st.state = 'Closed Complete'; st.auto = 'Applied'; } }
+  };
+
+  const E = {
+    'submit>validate': 'M380 140V172',
+    'validate>valid': 'M380 228V258',
+    'valid>queueDry': 'M380 338V378',
+    'valid>reject': 'M320 298H240',
+    'reject>wait': 'M140 326V378',
+    'wait>validate': 'M40 406H24V200H262',
+    'queueDry>tinesDry': 'M498 406H539',
+    'tinesDry>dryOk': 'M639 434V504H440',
+    'dryOk>approval': 'M380 544V584',
+    'dryOk>wait': 'M320 504H140V434',
+    'approval>approved': 'M380 640V670',
+    'approved>queueApply': 'M380 750V790',
+    'approved>closed': 'M320 710H240',
+    'queueApply>tinesApply': 'M498 818H539'
+  };
+
+  const TAIL = ['queueDry', 'tinesDry', 'dryOk', 'approval', 'approved', 'queueApply', 'tinesApply'];
+  const S = {
+    happy:    { note: 'A clean file goes through validation, dry run and approval on the first pass.',
+                path: ['submit', 'validate', 'valid'].concat(TAIL) },
+    badFile:  { note: 'The first file fails validation. The requester attaches a corrected file and the request carries on.',
+                path: ['submit', 'validate', 'valid', 'reject', 'wait', 'validate', 'valid'].concat(TAIL) },
+    dryFail:  { note: 'The file is valid, but the dry run finds an owner who does not exist in ISC. A corrected file goes round again.',
+                path: ['submit', 'validate', 'valid', 'queueDry', 'tinesDry', 'dryOk', 'wait', 'validate', 'valid'].concat(TAIL) },
+    rejected: { note: 'Everything passes, but the approver rejects the plan. Nothing changes in ISC.',
+                path: ['submit', 'validate', 'valid', 'queueDry', 'tinesDry', 'dryOk', 'approval', 'approved', 'closed'] }
+  };
+
+  const svg = document.getElementById('flow');
+  const gEdges = document.getElementById('edges');
+  const gTrails = document.getElementById('trails');
+  const gNodes = document.getElementById('nodes');
+  const token = document.getElementById('token');
+  const el = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+
+  const edgeEls = {};
+  for (const k in E) {
+    const p = el('path', { d: E[k], class: 'edge', 'marker-end': 'url(#arr-muted)' });
+    gEdges.appendChild(p); edgeEls[k] = p;
+  }
+
+  const nodeEls = {};
+  for (const id in N) {
+    const n = N[id];
+    const g = el('g', { class: 'node' + (n.tines ? ' tines' : '') + (n.bad ? ' badnode' : '') });
+    let shape, halo;
+    if (n.kind === 'dia') {
+      const pts = `${n.x - 60},${n.y} ${n.x},${n.y - 40} ${n.x + 60},${n.y} ${n.x},${n.y + 40}`;
+      halo = el('polygon', { points: pts, class: 'halo' });
+      shape = el('polygon', { points: pts });
+    } else {
+      const a = { x: n.x - n.w / 2, y: n.y - n.h / 2, width: n.w, height: n.h, rx: 8 };
+      halo = el('rect', Object.assign({ class: 'halo' }, a));
+      shape = el('rect', a);
+    }
+    g.appendChild(halo); g.appendChild(shape);
+    if (n.kind === 'dia') {
+      const t = el('text', { x: n.x, y: n.y + 4, 'text-anchor': 'middle', class: 't' }); t.textContent = n.t; g.appendChild(t);
+    } else {
+      const top = n.y - n.h / 2;
+      const t = el('text', { x: n.x, y: top + 24, 'text-anchor': 'middle', class: 't' }); t.textContent = n.t; g.appendChild(t);
+      const s = el('text', { x: n.x, y: top + 40, 'text-anchor': 'middle', class: 's' }); s.textContent = n.s; g.appendChild(s);
+      if (n.s2) { const s2 = el('text', { x: n.x, y: top + 56, 'text-anchor': 'middle', class: 's' }); s2.textContent = n.s2; g.appendChild(s2); }
+    }
+    gNodes.appendChild(g); nodeEls[id] = g;
+  }
+
+  const $ = id => document.getElementById(id);
+  const ui = {
+    lane: $('lane'), counter: $('counter'), title: $('stepTitle'), body: $('stepBody'), example: $('stepExample'),
+    progress: $('progress'), note: $('scenarioNote'), play: $('btn-play'), back: $('btn-back'), next: $('btn-next'), restart: $('btn-restart'),
+    f: { state: $('f-state'), group: $('f-group'), auto: $('f-auto'), approval: $('f-approval'), file: $('f-file') }
+  };
+
+  let scenario = 'happy', idx = 0, playing = false, busy = false, timer = null, prev = {};
+
+  function stateAt(path, i) {
+    const st = {}; let attempt = 0;
+    for (let j = 0; j <= i; j++) {
+      if (path[j] === 'validate') attempt++;
+      N[path[j]].apply(st, path[j + 1], { attempt });
+    }
+    return { st, attempt };
+  }
+
+  function render() {
+    const path = S[scenario].path;
+    const cur = path[idx], next = path[idx + 1];
+    const seen = new Set(path.slice(0, idx + 1));
+    for (const id in nodeEls) {
+      const g = nodeEls[id];
+      g.classList.toggle('done', seen.has(id) && id !== cur);
+      g.classList.toggle('active', id === cur);
+      const n = N[id];
+      g.classList.toggle('badout', id === cur && n.kind === 'dia' && n.tone && n.tone(next) === 'bad');
+    }
+    const walked = new Set();
+    for (let j = 0; j < idx; j++) walked.add(path[j] + '>' + path[j + 1]);
+    for (const k in edgeEls) {
+      const on = walked.has(k);
+      edgeEls[k].classList.toggle('walked', on);
+      edgeEls[k].setAttribute('marker-end', on ? 'url(#arr-accent)' : 'url(#arr-muted)');
+    }
+
+    const n = N[cur];
+    const { st, attempt } = stateAt(path, idx);
+    const ctx = { attempt };
+    ui.lane.textContent = n.lane;
+    ui.lane.className = 'chip' + (n.lane === 'Tines' ? ' tines' : (n.lane === 'Requester' || n.lane === 'Approvers') ? ' people' : '');
+    ui.counter.textContent = 'Step ' + (idx + 1) + ' of ' + path.length;
+    ui.title.textContent = n.title(next, ctx);
+    ui.title.classList.toggle('bad', !!(n.tone && n.tone(next) === 'bad'));
+    ui.body.textContent = n.body(next, ctx);
+    const ex = n.example ? n.example(next, ctx) : null;
+    ui.example.hidden = !ex;
+    if (ex) { ui.example.innerHTML = ''; ex.split('\n').forEach((line, i) => { if (i) ui.example.appendChild(document.createElement('br')); ui.example.appendChild(document.createTextNode(line)); }); }
+
+    const fields = { state: st.state, group: st.group, auto: st.auto, approval: st.approval, file: st.file };
+    for (const k in fields) {
+      const dd = ui.f[k];
+      const v = fields[k] || '—';
+      if (prev[k] !== undefined && prev[k] !== v && !reduce) {
+        dd.classList.add('flash'); dd.previousElementSibling.classList.add('flash');
+        setTimeout(() => { dd.classList.remove('flash'); dd.previousElementSibling.classList.remove('flash'); }, 700);
+      }
+      dd.textContent = v;
+      dd.classList.toggle('bad', /fail|Rejected|Incomplete|Awaiting corrected/.test(v));
+      dd.classList.toggle('good', /Applied|Closed Complete|^Approved$|complete$/.test(v));
+      prev[k] = v;
+    }
+
+    ui.progress.style.width = ((idx + 1) / path.length * 100) + '%';
+    ui.back.disabled = idx === 0 || busy;
+    ui.next.disabled = idx === path.length - 1 || busy;
+    ui.play.textContent = playing ? 'Pause' : (idx === path.length - 1 ? 'Replay' : 'Play');
+    ui.note.textContent = S[scenario].note;
+  }
+
+  function travel(key) {
+    return new Promise(resolve => {
+      const p = edgeEls[key];
+      if (!p || reduce) { resolve(); return; }
+      const len = p.getTotalLength();
+      const trail = el('path', { d: p.getAttribute('d'), class: 'trail' });
+      trail.style.strokeDasharray = len; trail.style.strokeDashoffset = len;
+      gTrails.appendChild(trail);
+      token.style.opacity = 1;
+      const dur = Math.min(1100, Math.max(420, len * 5));
+      const t0 = performance.now();
+      function frame(now) {
+        const t = Math.min(1, (now - t0) / dur);
+        const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+        const pt = p.getPointAtLength(e * len);
+        token.setAttribute('cx', pt.x); token.setAttribute('cy', pt.y);
+        trail.style.strokeDashoffset = len * (1 - e);
+        if (t < 1) requestAnimationFrame(frame);
+        else { trail.remove(); token.style.opacity = 0; resolve(); }
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+
+  async function forward() {
+    const path = S[scenario].path;
+    if (busy || idx >= path.length - 1) return false;
+    busy = true; render();
+    await travel(path[idx] + '>' + path[idx + 1]);
+    idx++; busy = false; render();
+    return true;
+  }
+
+  function stop() { playing = false; clearTimeout(timer); render(); }
+  function schedule() {
+    clearTimeout(timer);
+    if (!playing) return;
+    timer = setTimeout(async () => {
+      if (!playing) return;
+      const moved = await forward();
+      if (!moved || idx >= S[scenario].path.length - 1) { playing = false; render(); return; }
+      schedule();
+    }, reduce ? 2600 : 1700);
+  }
+
+  ui.play.addEventListener('click', () => {
+    if (playing) { stop(); return; }
+    if (idx >= S[scenario].path.length - 1) { idx = 0; prev = {}; }
+    playing = true; render(); schedule();
+  });
+  ui.next.addEventListener('click', () => { stop(); forward(); });
+  ui.back.addEventListener('click', () => { if (busy) return; stop(); if (idx > 0) { idx--; render(); } });
+  ui.restart.addEventListener('click', () => { if (busy) return; stop(); idx = 0; prev = {}; render(); });
+
+  document.querySelectorAll('.scenarios button').forEach(b => {
+    b.addEventListener('click', () => {
+      if (busy) return;
+      scenario = b.dataset.s;
+      document.querySelectorAll('.scenarios button').forEach(o => o.setAttribute('aria-checked', String(o === b)));
+      idx = 0; prev = {}; playing = !reduce; render(); schedule();
+    });
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.target.closest && e.target.closest('input, textarea')) return;
+    if (e.key === 'ArrowRight') { stop(); forward(); }
+    else if (e.key === 'ArrowLeft' && !busy && idx > 0) { stop(); idx--; render(); }
+  });
+
+  render();
+  if (!reduce) { playing = true; render(); schedule(); }
+})();
+</script>

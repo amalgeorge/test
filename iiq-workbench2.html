@@ -1,0 +1,1988 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      lang="en" xml:lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>IAMPRU Support — IAM User Guides and Manuals</title>
+  <style type="text/css">
+    /*<![CDATA[*/
+    /* ==========================================================================
+       STANDALONE SWISS GRID WORKBENCH FOR SAILPOINT IDENTITYIQ (.iiq-wb)
+       - Concept 03 Only: Left Procedure Rail | Center Walkthrough | Right PDF Dock
+       - Zero External CDNs (100% Air-Gapped Tomcat Compliant)
+       - Explicit px sizing (Immune to IIQ Bootstrap 3 html { font-size: 10px })
+       - Tokens: #FFFFFF, #F7F7F8, #111111, #E4002B; rounded corners via --r-* below
+       ========================================================================== */
+    .iiq-wb,
+    .iiq-wb *,
+    .iiq-wb *::before,
+    .iiq-wb *::after {
+      box-sizing: border-box !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Corner radius tokens */
+    .iiq-wb {
+      --r-xs: 4px;
+      --r-sm: 6px;
+      --r-md: 8px;
+      --r-lg: 12px;
+      --r-pill: 999px;
+    }
+
+    html, body.iiq-wb {
+      margin: 0;
+      padding: 0;
+      background-color: #FFFFFF;
+      color: #111111;
+      font-family: "Helvetica Neue", Helvetica, Arial, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      text-align: left;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .iiq-wb a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* :where() keeps this reset at low specificity so .btn-*, .cat-pill and
+       .rail-item borders/backgrounds are not wiped out. */
+    :where(.iiq-wb) button,
+    :where(.iiq-wb) input {
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+      background: none;
+      border: none;
+      margin: 0;
+    }
+
+    :where(.iiq-wb) button {
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .iiq-wb .t-num {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .iiq-wb .hidden {
+      display: none !important;
+    }
+
+    /* Custom Scrollbars */
+    .iiq-wb ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .iiq-wb ::-webkit-scrollbar-track {
+      background: #F7F7F8;
+    }
+    .iiq-wb ::-webkit-scrollbar-thumb {
+      border-radius: var(--r-pill);
+      background: #D4D4D8;
+    }
+    .iiq-wb ::-webkit-scrollbar-thumb:hover {
+      background: #E4002B;
+    }
+
+    /* Saved Session Resume Strip */
+    .iiq-wb-resume {
+      background-color: #111111;
+      color: #FFFFFF;
+      border-bottom: 2px solid #E4002B;
+      padding: 8px 20px;
+      font-size: 12px;
+    }
+    .iiq-wb-resume-inner {
+      max-width: 1600px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    /* Sticky Top Global Header */
+    .iiq-wb-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background-color: #FFFFFF;
+      border-bottom: 1px solid #111111;
+    }
+    .iiq-wb-header-top {
+      max-width: 1600px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 330px 1fr auto;
+      align-items: stretch;
+    }
+    .iiq-wb-brand-cell {
+      padding: 12px 20px;
+      border-right: 1px solid #E5E5E7;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .iiq-wb-brand-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .iiq-wb-logo {
+      border-radius: var(--r-md);
+      width: 40px;
+      height: 40px;
+      background-color: #E4002B;
+      color: #FFFFFF;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: -0.03em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .iiq-wb-brand-title {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.1;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: #111111;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .iiq-wb-brand-sub {
+      font-size: 11px;
+      color: #52525B;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Search Input Cell */
+    .iiq-wb-search-cell {
+      padding: 10px 20px;
+      background-color: #F7F7F8;
+      border-right: 1px solid #E5E5E7;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .iiq-wb-search-input {
+      width: 100%;
+      font-size: 13px;
+      font-weight: 500;
+      color: #111111;
+      outline: none;
+    }
+    .iiq-wb-search-input::placeholder {
+      color: #71717A;
+    }
+
+    /* Right Visit IAMPRU Cell */
+    .iiq-wb-status-cell {
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background-color: #FFFFFF;
+    }
+
+    /* Category Filter Strip */
+    .iiq-wb-catbar {
+      border-top: 1px solid #E5E5E7;
+      background-color: #FFFFFF;
+      padding: 8px 20px;
+    }
+    .iiq-wb-catbar-inner {
+      max-width: 1600px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    /* Scrollable pill row. Fades + arrows show only on the side that overflows. */
+    .cat-scroller {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+    }
+    .iiq-wb-cat-list {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      padding: 2px;
+    }
+    .iiq-wb .iiq-wb-cat-list::-webkit-scrollbar {
+      display: none;
+    }
+    .cat-pill {
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .cat-fade {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 72px;
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.18s ease, visibility 0s linear 0.18s;
+      z-index: 2;
+    }
+    .cat-fade-left {
+      left: 0;
+      justify-content: flex-start;
+      background: linear-gradient(to right, #FFFFFF 40%, rgba(255, 255, 255, 0));
+    }
+    .cat-fade-right {
+      right: 0;
+      justify-content: flex-end;
+      background: linear-gradient(to left, #FFFFFF 40%, rgba(255, 255, 255, 0));
+    }
+    .cat-scroller.can-left .cat-fade-left,
+    .cat-scroller.can-right .cat-fade-right {
+      opacity: 1;
+      visibility: visible;
+      transition-delay: 0s;
+    }
+    .cat-arrow {
+      pointer-events: auto;
+      width: 28px;
+      height: 28px;
+      border-radius: var(--r-pill);
+      border: 1px solid #111111;
+      background-color: #FFFFFF;
+      color: #111111;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .cat-arrow:hover {
+      background-color: #111111;
+      color: #FFFFFF;
+    }
+    .cat-arrow svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Buttons */
+    .btn-red {
+      border-radius: var(--r-md);
+      background-color: #E4002B;
+      color: #FFFFFF !important;
+      border: 1px solid #E4002B;
+      padding: 8px 14px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background-color 0.15s ease;
+    }
+    .btn-red:hover {
+      background-color: #B80022;
+      border-color: #B80022;
+    }
+
+    .btn-outline {
+      border-radius: var(--r-md);
+      background-color: #FFFFFF;
+      color: #111111 !important;
+      border: 1px solid #111111;
+      padding: 8px 14px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .btn-outline:hover {
+      background-color: #111111;
+      color: #FFFFFF !important;
+    }
+
+    .btn-subtle {
+      border-radius: var(--r-md);
+      background-color: #F7F7F8;
+      color: #111111 !important;
+      border: 1px solid #E5E5E7;
+      padding: 6px 10px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+    }
+    .btn-subtle:hover {
+      border-color: #E4002B;
+      color: #E4002B !important;
+      background-color: #FFF0F3;
+    }
+
+    .cat-pill {
+      border-radius: var(--r-pill);
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 1px solid #E5E5E7;
+      background-color: #F7F7F8;
+      color: #111111;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .cat-pill:hover {
+      border-color: #E4002B;
+    }
+    .cat-pill.active {
+      background-color: #111111;
+      color: #FFFFFF;
+      border-color: #111111;
+    }
+    .cat-pill-count {
+      border-radius: var(--r-pill);
+      padding: 1px 5px;
+      font-size: 10px;
+      background-color: #FFFFFF;
+      color: #52525B;
+    }
+    .cat-pill.active .cat-pill-count {
+      background-color: #E4002B;
+      color: #FFFFFF;
+    }
+
+    /* 3-Pane Split-Screen Workbench */
+    .iiq-wb-main {
+      max-width: 1600px;
+      width: 100%;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 330px minmax(0, 1fr);
+      border-bottom: 1px solid #111111;
+      min-height: calc(100vh - 108px);
+    }
+    body.iiq-wb.focus-mode .iiq-wb-main {
+      grid-template-columns: 0px minmax(0, 1fr);
+    }
+    body.iiq-wb.focus-mode #paneIndex {
+      overflow: hidden;
+      border-right-width: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .iiq-wb-pane {
+      height: calc(100vh - 108px);
+      overflow-y: auto;
+    }
+
+    /* Left Pane: Procedure Index Rail */
+    .iiq-wb-pane-index {
+      border-right: 1px solid #E5E5E7;
+      background-color: #FFFFFF;
+    }
+    .rail-header {
+      padding: 14px 16px;
+      background-color: #F7F7F8;
+      border-bottom: 1px solid #E5E5E7;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    #guideListContainer {
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .rail-item {
+      border-radius: var(--r-md);
+      width: 100%;
+      padding: 14px;
+      background-color: #FFFFFF;
+      color: #111111;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      transition: background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .rail-item:hover {
+      background-color: #F7F7F8;
+      box-shadow: inset 4px 0 0 #D4D4D8;
+    }
+    .rail-item:hover .rail-title {
+      color: #E4002B;
+    }
+    .rail-item.active,
+    .rail-item.active:hover {
+      background-color: #111111;
+      color: #FFFFFF;
+      box-shadow: inset 6px 0 0 #E4002B;
+    }
+    .rail-item.active .rail-title {
+      color: #FFFFFF;
+    }
+    .rail-file {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #E4002B;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .rail-title {
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.35;
+      margin-top: 4px;
+      transition: color 0.15s ease;
+    }
+    .rail-role {
+      font-size: 11px;
+      margin-top: 4px;
+      color: #71717A;
+    }
+    .rail-item.active .rail-file,
+    .rail-item.active .rail-role {
+      color: #A1A1AA;
+    }
+    .rail-num {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: #111111;
+      flex-shrink: 0;
+    }
+    .rail-item.active .rail-num {
+      color: #E4002B;
+    }
+
+    /* Center Pane: Step-by-Step Walkthrough */
+    .iiq-wb-pane-walk {
+      background-color: #FFFFFF;
+      padding: 28px 32px;
+    }
+
+    /* Collapsible Step Cards */
+    .step-card {
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      border: 1px solid #E5E5E7;
+      background-color: #FFFFFF;
+      margin-bottom: 10px;
+      transition: border-color 0.16s ease, box-shadow 0.2s ease;
+    }
+    .step-card:hover {
+      border-color: #111111;
+    }
+    .step-card.is-open {
+      border-color: #111111;
+      box-shadow: inset 4px 0 0 #E4002B;
+    }
+    .step-head {
+      cursor: pointer;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 20px 16px 24px;
+    }
+    .step-num {
+      display: block;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #E4002B;
+      margin-bottom: 4px;
+    }
+    .step-title {
+      display: block;
+      font-size: 15px;
+      font-weight: 800;
+      color: #111111;
+      line-height: 1.35;
+    }
+    .step-chevron {
+      width: 10px;
+      height: 10px;
+      border-right: 2px solid #111111;
+      border-bottom: 2px solid #111111;
+      transform: rotate(45deg);
+      transition: transform 0.22s ease, margin 0.22s ease;
+      flex-shrink: 0;
+      margin: 0 4px 4px 0;
+    }
+    .step-card.is-open .step-chevron {
+      transform: rotate(-135deg);
+      margin: 4px 4px 0 0;
+    }
+    .step-body {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .step-card.is-open .step-body {
+      grid-template-rows: 1fr;
+    }
+    .step-body-inner {
+      min-height: 0;
+      overflow: hidden;
+      visibility: hidden;
+      transition: visibility 0s linear 0.26s;
+    }
+    .step-card.is-open .step-body-inner {
+      visibility: visible;
+      transition-delay: 0s;
+    }
+    .step-body-content {
+      padding: 0 20px 18px 24px;
+    }
+    .step-body-content p {
+      margin: 0;
+      font-size: 13px;
+      color: #52525B;
+      line-height: 1.6;
+      max-width: 90ch;
+    }
+    .step-figure {
+      border-radius: var(--r-md);
+      margin: 14px 0 0 0;
+      padding: 8px;
+      background-color: #F7F7F8;
+      border: 1px solid #E5E5E7;
+      max-width: 960px;
+    }
+    .step-figure img {
+      display: block;
+      border-radius: var(--r-sm);
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Badges */
+    .badge-red {
+      border-radius: var(--r-xs);
+      background-color: #E4002B;
+      color: #FFFFFF;
+      padding: 2px 8px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: inline-block;
+    }
+    .badge-neutral {
+      border-radius: var(--r-xs);
+      background-color: #F7F7F8;
+      color: #111111;
+      border: 1px solid #E5E5E7;
+      padding: 2px 8px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: inline-block;
+    }
+
+    /* Bottom Pane: All PDF User Guides + Support */
+    .iiq-wb-footer {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 560px;
+      background-color: #F7F7F8;
+      border-bottom: 1px solid #111111;
+    }
+    .iiq-wb-footer-inner {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 28px 32px;
+    }
+    .iiq-wb-guide-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
+    }
+    .iiq-wb-guide-link {
+      border-radius: var(--r-md);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      background-color: #FFFFFF;
+      border: 1px solid #E5E5E7;
+      transition: border-color 0.15s ease;
+    }
+    .iiq-wb-guide-link:hover {
+      border-color: #E4002B;
+    }
+    .iiq-wb-support {
+      background-color: #111111;
+      color: #FFFFFF;
+      border-top: 4px solid #E4002B;
+    }
+    .iiq-wb-support-inner {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 22px 32px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    /* Visual Flow Guide Pop-up */
+    .iiq-wb-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background-color: rgba(17, 17, 17, 0.72);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .iiq-wb-modal-box {
+      border-radius: var(--r-lg);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+      background-color: #FFFFFF;
+      border: 2px solid #111111;
+      width: 100%;
+      max-width: 1280px;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .iiq-wb-modal-head {
+      background-color: #111111;
+      color: #FFFFFF;
+      padding: 12px 18px;
+      border-bottom: 2px solid #E4002B;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .iiq-wb-modal-kicker {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #E4002B;
+    }
+    .iiq-wb-modal-title {
+      font-size: 14px;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    #flowModalFrame {
+      flex: 1;
+      width: 100%;
+      border: 0;
+      background-color: #FFFFFF;
+    }
+    body.iiq-wb.modal-open {
+      overflow: hidden;
+    }
+
+    /* Keyboard Focus Rings */
+    .iiq-wb :focus {
+      outline: none;
+    }
+    .iiq-wb :focus-visible {
+      outline: 2px solid #E4002B !important;
+      outline-offset: 2px;
+    }
+    .iiq-wb .step-head:focus-visible,
+    .iiq-wb .rail-item:focus-visible {
+      outline-offset: -2px;
+    }
+    .iiq-wb-search-cell:focus-within {
+      box-shadow: inset 0 -2px 0 #E4002B;
+    }
+
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      .iiq-wb *,
+      .iiq-wb *::before,
+      .iiq-wb *::after {
+        transition-duration: 0s !important;
+        transition-delay: 0s !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* Mobile Responsive Overrides (<1024px) */
+    .iiq-wb-mobile-bar,
+    .iiq-wb-mobile-nav {
+      display: none;
+    }
+
+    @media (max-width: 1023px) {
+      .iiq-wb-header-top {
+        grid-template-columns: 1fr;
+      }
+      .iiq-wb-brand-cell,
+      .iiq-wb-search-cell {
+        border-right: none;
+        border-bottom: 1px solid #E5E5E7;
+      }
+      .hide-on-mobile {
+        display: none !important;
+      }
+      .iiq-wb-main {
+        display: block;
+        min-height: auto;
+      }
+      .iiq-wb-pane {
+        height: auto;
+        overflow-y: visible;
+      }
+      .iiq-wb-pane-walk {
+        padding: 18px 16px;
+      }
+      .mobile-pane-hidden {
+        display: none !important;
+      }
+      .iiq-wb-mobile-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        background-color: #F7F7F8;
+        border-top: 1px solid #E5E5E7;
+        padding: 8px 16px;
+      }
+      .iiq-wb-guide-grid {
+        grid-template-columns: 1fr;
+      }
+      .iiq-wb-footer-inner,
+      .iiq-wb-support-inner {
+        padding: 20px 16px;
+      }
+      .iiq-wb-mobile-nav {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 40;
+        background-color: #FFFFFF;
+        border-top: 2px solid #111111;
+      }
+      body.iiq-wb {
+        padding-bottom: 68px;
+      }
+      .iiq-wb-modal-backdrop {
+        padding: 0;
+      }
+      .iiq-wb-modal-box {
+        height: 100vh;
+        border: none;
+        border-radius: 0;
+      }
+      .iiq-wb-modal-head {
+        flex-wrap: wrap;
+      }
+    }
+    /*]]>*/
+  </style>
+</head>
+<body class="iiq-wb">
+
+  <!-- SAVED SESSION RESUME BANNER -->
+  <div id="resumeBanner" class="iiq-wb-resume hidden">
+    <div class="iiq-wb-resume-inner">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="badge-red">Saved IIQ Session</span>
+        <span id="resumeBannerText" style="color:#E4E4E7; font-weight:500;">Resume the guide you last viewed.</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:14px;">
+        <button type="button" data-action="resume-session" style="color:#E4002B; font-weight:800; text-transform:uppercase; font-size:11px; letter-spacing:0.06em;">
+          Open Last Guide &#8594;
+        </button>
+        <button type="button" data-action="dismiss-resume" style="color:#A1A1AA; font-weight:700; text-transform:uppercase; font-size:10px;">
+          Dismiss &#215;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STICKY TOP GLOBAL HEADER -->
+  <header class="iiq-wb-header">
+    <div class="iiq-wb-header-top">
+      <!-- Brand -->
+      <div class="iiq-wb-brand-cell">
+        <div class="iiq-wb-brand-box">
+          <div class="iiq-wb-logo">IAM</div>
+          <div style="min-width:0;">
+            <div class="iiq-wb-brand-title">IAMPRU Support</div>
+            <div class="iiq-wb-brand-sub">IAM User Guides and Manuals</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pre-Indexed Search Input -->
+      <div class="iiq-wb-search-cell">
+        <svg width="16" height="16" fill="none" stroke="#E4002B" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0;">
+          <path stroke-linecap="square" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z"/>
+        </svg>
+        <input
+          id="searchInput"
+          type="search"
+          autocomplete="off"
+          placeholder="Search 12 IIQ procedures, /identityiq/help/ PDFs, or .jsf modules (Press '/')..."
+          class="iiq-wb-search-input"
+        />
+        <button
+          type="button"
+          id="clearSearchBtn"
+          data-action="clear-search"
+          class="btn-subtle hidden"
+        >
+          Clear
+        </button>
+      </div>
+
+      <!-- Visit IAMPRU Link -->
+      <div class="iiq-wb-status-cell">
+        <a
+          href="/identityiq/home.jsf"
+          class="btn-outline"
+          title="Go to IAMPRU (SailPoint IdentityIQ Home)"
+        >
+          Visit IAMPRU &#8599;
+        </a>
+      </div>
+    </div>
+
+    <!-- Category Filter Bar -->
+    <div class="iiq-wb-catbar">
+      <div class="iiq-wb-catbar-inner">
+        <div id="catScroller" class="cat-scroller">
+          <div class="cat-fade cat-fade-left">
+            <button type="button" class="cat-arrow" data-action="cat-scroll" data-dir="-1" aria-label="Scroll categories left">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 5l-7 7 7 7"/></svg>
+            </button>
+          </div>
+          <div id="categoryFilterContainer" class="iiq-wb-cat-list" role="toolbar" aria-label="Guide categories"></div>
+          <div class="cat-fade cat-fade-right">
+            <button type="button" class="cat-arrow" data-action="cat-scroll" data-dir="1" aria-label="Scroll categories right">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="hide-on-mobile" style="display:flex; align-items:center; gap:12px; font-size:11px; color:#52525B; flex-shrink:0;">
+          <span id="visibleGuidesCount" class="t-num" style="font-weight:800; color:#E4002B;">12 / 12 Guides</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Sticky Active Guide & PDF Bar (<1024px) -->
+    <div class="iiq-wb-mobile-bar">
+      <div style="min-width:0; flex:1; display:flex; align-items:center; gap:6px;">
+        <span id="mobileActiveCode" class="t-num" style="font-size:10px; font-weight:800; color:#E4002B;">PDF-01</span>
+        <span id="mobileActiveTitle" style="font-size:12px; font-weight:800; color:#111111; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+          Manage User Access
+        </span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+        <a
+          id="mobileQuickPdfLink"
+          href="/identityiq/help/IIQ-USR-01-Manage-User-Access-Manual.pdf"
+          target="_blank"
+          rel="noopener"
+          class="badge-red"
+          style="padding:4px 8px;"
+        >
+          PDF &#8599;
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 2-PANE SPLIT-SCREEN WORKBENCH -->
+  <main id="workbenchRoot" class="iiq-wb-main">
+
+    <!-- PANE 01 (LEFT): IDENTITYIQ PROCEDURE INDEX RAIL -->
+    <aside id="paneIndex" class="iiq-wb-pane iiq-wb-pane-index mobile-pane-hidden" aria-label="IdentityIQ Procedure Index">
+      <div class="rail-header">
+        <div>
+          <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#E4002B;">
+            PANE 01 &#8226; IIQ DIRECTORY
+          </div>
+          <div style="font-size:12px; font-weight:800; color:#111111;">
+            Select Procedure
+          </div>
+        </div>
+      </div>
+      <div id="guideListContainer" role="listbox" aria-label="IdentityIQ Procedures"></div>
+    </aside>
+
+    <!-- PANE 02 (CENTER): INTERACTIVE STEP-BY-STEP WALKTHROUGH -->
+    <section id="paneWalkthrough" class="iiq-wb-pane iiq-wb-pane-walk" aria-label="Step-by-Step Walkthrough"></section>
+
+  </main>
+
+  <!-- BOTTOM PANE: ALL PDF USER GUIDES -->
+  <section class="iiq-wb-footer" aria-label="All PDF User Guides">
+    <div class="iiq-wb-footer-inner">
+      <div style="display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:8px; margin-bottom:18px;">
+        <div>
+          <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#E4002B;">
+            Library
+          </div>
+          <div style="font-size:18px; font-weight:800; color:#111111;">
+            All PDF User Guides
+          </div>
+        </div>
+        <span style="font-size:11px; color:#52525B;">Each link opens the full PDF in a new tab.</span>
+      </div>
+      <div id="allGuidesFooter" class="iiq-wb-guide-grid"></div>
+    </div>
+  </section>
+
+  <!-- BOTTOM-MOST: SUPPORT EMAIL -->
+  <section class="iiq-wb-support" aria-label="Contact Support">
+    <div class="iiq-wb-support-inner">
+      <div>
+        <div style="font-size:16px; font-weight:800;">Can&#8217;t find what you&#8217;re looking for?</div>
+        <div style="font-size:12px; color:#A1A1AA; margin-top:2px;">
+          Email the support team directly at <strong style="color:#FFFFFF;">support@iiq.com</strong>
+        </div>
+      </div>
+      <a id="supportEmailLink" href="mailto:support@iiq.com" class="btn-red">
+        Email Support in Outlook &#8599;
+      </a>
+    </div>
+  </section>
+
+  <!-- MOBILE BOTTOM 2-PANE SWITCHER (<1024px) -->
+  <nav class="iiq-wb-mobile-nav" aria-label="Mobile Workbench Views">
+    <button
+      type="button"
+      data-action="switch-mobile-tab"
+      data-tab="index"
+      id="mobTabIndex"
+      style="padding:10px 6px; display:flex; flex-direction:column; align-items:center; justify-content:center; border-right:1px solid #E5E5E7;"
+    >
+      <span style="font-size:10px; font-weight:800; text-transform:uppercase; opacity:0.75;">01 Directory</span>
+      <span style="font-size:12px; font-weight:800; margin-top:2px;">All 12 Guides</span>
+    </button>
+    <button
+      type="button"
+      data-action="switch-mobile-tab"
+      data-tab="walkthrough"
+      id="mobTabWalkthrough"
+      style="padding:10px 6px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#E4002B; color:#FFFFFF;"
+    >
+      <span style="font-size:10px; font-weight:800; text-transform:uppercase; opacity:0.85;">02 Execute</span>
+      <span id="mobTabStepsBadge" style="font-size:12px; font-weight:800; margin-top:2px;">Walkthrough</span>
+    </button>
+  </nav>
+
+  <!-- VISUAL FLOW GUIDE POP-UP (loads the guide's flowGuideUrl in an iframe) -->
+  <div id="flowModal" class="iiq-wb-modal-backdrop hidden">
+    <div class="iiq-wb-modal-box" role="dialog" aria-modal="true" aria-labelledby="flowModalTitle">
+      <div class="iiq-wb-modal-head">
+        <div style="min-width:0;">
+          <div class="iiq-wb-modal-kicker">Visual Flow Guide</div>
+          <div id="flowModalTitle" class="iiq-wb-modal-title"></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+          <a id="flowModalNewTab" href="#" target="_blank" rel="noopener" class="btn-outline">
+            Open in New Tab &#8599;
+          </a>
+          <button type="button" id="flowModalClose" data-action="close-flow" class="btn-red" aria-label="Close visual flow guide">
+            Close &#215;
+          </button>
+        </div>
+      </div>
+      <iframe id="flowModalFrame" title="Visual flow guide" src="about:blank"></iframe>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    //<![CDATA[
+    /*************************************************************************
+     * 1. SAILPOINT IDENTITYIQ CONFIGURATION & 12 PROCEDURES
+     *    - Automatically resolves #{base.requestContextPath} when rendered by
+     *      IIQ Facelets, or falls back to '/identityiq' when previewed as .html
+     *************************************************************************/
+    const RAW_EL_CTX = '#{base.requestContextPath}';
+    const IIQ_CONTEXT_PATH = (RAW_EL_CTX.indexOf('#{') === 0 || !RAW_EL_CTX) ? '/identityiq' : RAW_EL_CTX;
+    const SERVER_PDF_BASE = IIQ_CONTEXT_PATH + '/help/';
+    const FLOW_BASE = IIQ_CONTEXT_PATH + '/help/flows/';    // visual flow pages on the IIQ server
+    const IMAGE_BASE = IIQ_CONTEXT_PATH + '/help/images/';  // step images on the IIQ server
+    // DEMO ONLY: local files on the author's PC. Works only when this page is opened
+    // as a local file on that PC; browsers block file:/// when served over http/https.
+    // Replace the DEMO entries below with FLOW_BASE / IMAGE_BASE paths before deploying.
+    const DEMO_LOCAL_DIR = 'file:///C:/Users/amalg/Downloads/';
+
+    /* HOW TO ADD VISUAL FLOW GUIDES AND STEP IMAGES
+     *  - flowGuideUrl: path to the guide's visual flow page (HTML + D3.js), e.g.
+     *      FLOW_BASE + 'identity-change-flow.html'  (= /identityiq/help/flows/...)
+     *    Leave it '' and the "Visual Flow Guide" button is hidden for that guide.
+     *  - steps[].image: path to an optional screenshot for that step, e.g.
+     *      IMAGE_BASE + 'PDF-01-step-01.png'  (= /identityiq/help/images/...)
+     *    Leave it '' and no image is shown when the step is expanded.
+     *    If the file is missing on the server, the image area hides itself.
+     */
+    const HELP_GUIDES = [
+      {
+        id: 'PDF-01',
+        num: '01',
+        category: 'Access & Provisioning',
+        role: 'All Employees',
+        title: 'Requesting Roles & Entitlements in Manage User Access',
+        shortTask: 'Submit a self-service or peer access request in IdentityIQ',
+        pdfFilename: 'IIQ-USR-01-Manage-User-Access-Manual.pdf',
+        flowGuideUrl: DEMO_LOCAL_DIR + 'identity-change-flow.html',  // DEMO: local file
+        iiqModuleLabel: 'Launch Manage User Access',
+        iiqJsfPath: IIQ_CONTEXT_PATH + '/accessRequest/accessRequest.jsf',
+        summary: 'Step-by-step walkthrough for navigating QuickLinks > Manage Access > Manage User Access, selecting IdentityIQ Business/IT Roles or Entitlements, entering auditable comments, and tracking Work Item approvals.',
+        steps: [
+          {
+            title: 'Open QuickLinks > Manage User Access',
+            instruction: 'Sign in to SailPoint IdentityIQ, open the top-left QuickLinks menu (or click the Manage User Access card on your Home Dashboard), and select your identity on the "Select Users" tab.',
+            image: DEMO_LOCAL_DIR + 'Gemini_Generated_Image_xgadotxgadotxgad.jpeg'  // DEMO: local file
+          },
+          {
+            title: 'Search & Add Roles or Entitlements in "Manage Access"',
+            instruction: 'Advance to the "Manage Access" tab, filter by Role or Application Entitlement keyword, and click the checkmark button next to the required permission to add it to your cart.',
+            image: ''
+          },
+          {
+            title: 'Enter Auditable Justification & Sunset Date on "Review"',
+            instruction: 'Click the "Review" tab, click the Comment icon on your requested item to enter a 30+ character business justification, and optionally assign a Sunrise/Sunset activation window.',
+            image: ''
+          },
+          {
+            title: 'Submit Request & Track Identity Request ID in "Track My Requests"',
+            instruction: 'Click "Submit" to trigger the LCM Provisioning workflow, record your 10-digit Identity Request ID, and monitor approver Work Items under QuickLinks > Track My Requests.',
+            image: ''
+          }
+        ]
+      },
+      {
+        id: 'PDF-02',
+        num: '02',
+        category: 'Access & Provisioning',
+        role: 'All Employees',
+        title: 'Tracking Access Requests, Work Items & Pending Approvals',
+        shortTask: 'Check status of a pending Identity Request or escalate a stuck Work Item',
+        pdfFilename: 'IIQ-USR-02-Track-My-Requests-WorkItems-Guide.pdf',
+        flowGuideUrl: FLOW_BASE + 'signal_dashboard.html',
+        iiqModuleLabel: 'Open Track My Requests',
+        iiqJsfPath: IIQ_CONTEXT_PATH + '/accessRequest/trackMyRequests.jsf',
+        summary: 'Complete end-user guide to inspecting Identity Request execution stages, identifying which approver holds a pending Work Item, and cancelling or escalating delayed requests in IdentityIQ.',
+        steps: [
+          {
+            title: 'Open QuickLinks > Manage Access > Track My Requests',
+            instruction: 'Navigate to Track My Requests from the QuickLinks menu or click the "Track My Requests" widget on your IdentityIQ Home Dashboard.',
+            image: IMAGE_BASE + 'Gemini_Generated_Image_xgadotxgadotxgad.jpeg'
+          },
+          {
+            title: 'Expand Request Row to Identify Current Work Item Owner',
+            instruction: 'Click the expand arrow on your request row and select the "Approvals" sub-panel to view the exact Manager or Governance Group currently assigned the Work Item.',
+            image: ''
+          },
+          {
+            title: 'Add Follow-Up Comments or Request Work Item Forwarding',
+            instruction: 'If the assigned approver is out of office, add a comment inside the request or ask their delegate to forward the Work Item via Home > Work Items.',
+            image: ''
+          }
+        ]
+      },
+      {
+        id: 'PDF-03',
+        num: '03',
+        category: 'Access & Provisioning',
+        role: 'All Employees',
+        title: 'Self-Service Password Management & Target Account Unlock',
+        shortTask: 'Reset synchronized application passwords or unlock locked accounts',
+        pdfFilename: 'IIQ-USR-03-Password-Management-Unlock-Manual.pdf',
+        flowGuideUrl: FLOW_BASE + 'IAM%20Joiner%20Process%20Slide%20-%20Kimi.html',
+        iiqModuleLabel: 'Open Manage Passwords',
+        iiqJsfPath: IIQ_CONTEXT_PATH + '/passwordMgmt/passwordManagement.jsf',
+        summary: 'Follow this quick-recovery guide to reset or synchronize passwords across Active Directory and connected target applications using IdentityIQ Manage Passwords.',
+        steps: [
+          {
+            title: 'Navigate to QuickLinks > Manage Passwords',
+            instruction: 'Open QuickLinks > Manage Access > Manage Passwords (or click Forgot Password on the IdentityIQ login screen if locked out of primary SSO).',
+            image: IMAGE_BASE + 'Gemini_Generated_Image_xgadotxgadotxgad.jpeg'
+          },
+          {
+            title: 'Select Target Application Accounts & Action Type',
+            instruction: 'Check the box next to the locked or expired application account and choose "Change Password" or "Unlock Account".',
+            image: ''
+          },
+          {
+            title: 'Clear Cached Mobile & Workstation Credentials',
+            instruction: 'After IdentityIQ confirms provisioning success, update saved passwords in Windows Credential Manager, macOS Keychain, and mobile corporate Wi-Fi.',
+            image: ''
+          }
+        ]
+      },
+      {
+        id: 'PDF-04',
+        num: '04',
+        category: 'Security & Privileged IDs',
+        role: 'System Administrators',
+        title: 'Privileged ID (-adm / -priv) Tagging & PAM Link Governance in IIQ',
+        shortTask: 'Request and classify elevated administrator accounts on your Identity Cube',
+        pdfFilename: 'IIQ-SEC-04-Privileged-ID-Tagging-PAM-Manual.pdf',
+        flowGuideUrl: FLOW_BASE + 'identity-change-flow.html',
+        iiqModuleLabel: 'Open Identity Warehouse',
+        iiqJsfPath: IIQ_CONTEXT_PATH + '/define/identity/identities.jsf',
+        summary: 'Mandatory governance manual for administrators operating secondary -adm, -priv, or -dba accounts, detailing IdentityIQ Link Extended Attributes for Privileged ID tagging and PAM vault integration.',
+        steps: [
+          {
+            title: 'Verify Account Suffix & Identity Cube Correlation',
+            instruction: 'Confirm your secondary elevated account uses the approved naming standard (-adm, -priv, or -dba) and is correlated to your primary human Identity Cube in IdentityIQ.',
+            image: IMAGE_BASE + 'Gemini_Generated_Image_xgadotxgadotxgad.jpeg'
+          },
+          {
+            title: 'Populate Mandatory IIQ Link Extended Attributes (Privileged Tagging)',
+            instruction: 'When submitting the Privileged Account Provisioning form in Manage User Access, populate the 4 mandatory Link Extended Attributes: privilegedClassification, custodianId, environmentTier, and pamSafeName.',
+            image: ''
+          },
+          {
+            title: 'Verify CyberArk / PAM Safe Onboarding & Vaulting',
+            instruction: 'Confirm the provisioned account credentials are vaulted in the designated PAM Safe via the IdentityIQ PAM Module / SCIM connector.',
+            image: ''
+          }
+        ]
+      },
+      {
+        id: 'PDF-05',
+        num: '05',
+        category: 'Security & Privileged IDs',
+        role: 'Line Managers',
+        title: 'Quarterly Manager & Application Owner Access Certifications in IIQ',
+        shortTask: 'Complete quarterly IdentityIQ Access Review certification sign-offs',
+        pdfFilename: 'IIQ-SEC-05-Access-Certification-Handbook.pdf',
+        flowGuideUrl: FLOW_BASE + 'signal_dashboard.html',
+        iiqModuleLabel: 'Open My Access Reviews',
+        iiqJsfPath: IIQ_CONTEXT_PATH + '/certification/certification.jsf',
+        summary: 'Visual handbook for Line Managers and Application Owners completing quarterly Access Reviews in IdentityIQ, covering Important vs. Open tabs, bulk revocation, delegation, and final Sign-Off.',
+        steps: [
+          {
+            title: 'Open QuickLinks > My Tasks > Access Reviews',
+            instruction: 'Click the certification link in your notification email or navigate to QuickLinks > My Tasks > Access Reviews (/identityiq/certification/certification.jsf).',
+            image: IMAGE_BASE + 'Gemini_Generated_Image_xgadotxgadotxgad.jpeg'
+          },
+          {
+            title: 'Review Privileged (-adm) & Policy Violation Items on "Important" Tab',
+            instruction: 'Inspect every item flagged with a Policy Violation or Privileged icon. Click Approve, Revoke, or Allow Exception (with mandatory mitigation expiration date).',
+            image: ''
+          },
+          {
+            title: 'Process Standard Entitlements on "Open" Tab & Save Decisions',
+            instruction: 'For each direct report on the Open tab, click Approve (checkmark) or Revoke (X), then click "Save Decisions" at the bottom of the worksheet.',
+            image: ''
+          },
+          {
+            title: 'Click Final "Sign Off Decisions" Modal Confirmation',
+            instruction: 'Once "Open (0)" reaches zero, click the "Sign Off Decisions" button—saving decisions without signing off leaves the campaign incomplete.',
+            image: ''
+          }
+        ]
+      },
+      {
+        id: 'PDF-06',
+        num: '06',
+        category: 'Security & Privileged IDs',
+        role: 'All Employees',
+        title: 'Resolving IdentityIQ Policy Violations & SoD Work Items',
+        shortTask: 'Clear Detective or Preventative Segregation of Duties (SoD) blocks',
+        pdfFilename: 'IIQ-SEC-06-SoD-Policy-Violation-Playbook.pdf',
+        flowGuideUrl: FLOW_BASE + 'IAM%20Joiner%20Process%20Slide%20-%20Kimi.html',
+        iiqModuleLabel: 'Open Policy Violations',
+        iiqJsfPath: IIQ_CONTEXT_PATH + '/policy/policyViolations.jsf',
+        summary: 'Explains how IdentityIQ Preventative and Detective SoD Policies evaluate toxic role combinations and walks users through either removing conflicting access or submitting a time-bound mitigation.',
+        steps: [
+          {
+            title: 'Inspect the Conflicting Role/Entitlement Pair in the Violation Banner',
+            instruction: 'When Manage User Access displays a Red Policy Violation warning, click "View Details" to see the exact existing role or entitlement conflicting with your cart item.',
+            image: IMAGE_BASE + 'Gemini_Generated_Image_xgadotxgadotxgad.jpeg'
+          },
+          {
+            title: 'Option A: Submit Remove Access for the Legacy Role (Fastest Fix)',
+            instruction: 'In Manage User Access > Remove Access tab, select the legacy conflicting role and submit its removal first so your new request passes policy evaluation.',
+            image: ''
+          },
+          {
+            title: 'Option B: Attach Signed Compensating Control Form (IIQ-FRM-06)',
+            instruction: 'If business continuity requires holding both roles temporarily, attach the signed Form IIQ-FRM-06 PDF to your violation Work Item.',
+            image: ''
+          }
+        ]
+      },
+      {
+        id: 'PDF-07',
+        num: '07',
+        category: 'Application Onboarding',
+        role: 'Application Owners',
+        title: 'IdentityIQ Application Onboarding & Connector Definition Runbook',
+        shortTask: 'Onboard a new JDBC, DelimitedFile, SCIM, or AD application into IIQ',
+        pdfFilename: 'IIQ-APP-07-Application-Onboarding-Runbook.pdf',
+        flowGuideUrl: FLOW_BASE + 'identity-change-flow.html',
+        iiqModuleLabel: 'Open Application Definitions',
+        iiqJsfPath: IIQ_CONTEXT_PATH + '/define/applications/applications.jsf',
+        summary: 'End-to-end engineering and governance runbook for Application Owners onboarding applications into SailPoint IdentityIQ via Applications > Application Definition, Schema Correlation, and Managed Attribute catalog enrichment.',
+        steps: [
+          {
+            title: 'Complete Application Definition Intake & Connector Selection',
+            instruction: 'Select your target IdentityIQ connector type (SCIM 2.0, Web Services, JDBC, Active Directory, or DelimitedFile) and register the application under Define > Applications.',
+            image: IMAGE_BASE + 'Gemini_Generated_Image_xgadotxgadotxgad.jpeg'
+          },
+          {
+            title: 'Configure Account Schema & Identity Cube Correlation Rule',
+            instruction: 'Define the Identity Attribute (e.g., employeeId or sAMAccountName), configure the Correlation Rule to link accounts to Identity Cubes, and run Test Connection.',
+            image: ''
+          },
+          {
+            title: 'Enrich Entitlement Catalog in "Managed Attributes" (IIQ-FRM-07)',
+            instruction: 'Download Form IIQ-FRM-07 and populate Display Names, plain-English Descriptions, Owner, and Requestable flags for the Entitlement Catalog (Applications > Entitlement Catalog).',
+            image: ''
+          },
+          {
+            title: 'Execute Account Aggregation, Group Aggregation & JML UAT',
+            instruction: 'Run the Account Aggregation and Account Group Aggregation tasks under Setup > Tasks, then validate Joiner, Mover, and Leaver LCM provisioning in UAT.',
+            image: ''
+          }
+        ]
+      },
+      {
+        id: 'PDF-08',
+        num: '08',
+        category: 'Application Onboarding',
+        role: 'Application Owners',
+        title: 'IdentityIQ SSO SAML 2.0 Integration & Rule Configuration Guide',
+        shortTask: 'Configure SAML 2.0 SSO or update signing certificates in IIQ',
+        pdfFilename: 'IIQ-APP-08-SAML-SSO-Configuration-Manual.pdf',
+        flowGuideUrl: FLOW_BASE + 'signal_dashboard.html',
+        iiqModuleLabel: 'Open Global Settings',
+        iiqJsfPath: IIQ_CONTEXT_PATH + '/systemSetup/index.jsf',
+        summary: 'Technical specification guide for configuring SAML 2.0 Service Provider settings in IdentityIQ (Gear > Global Settings > Login Configuration > SAML), including NameID correlation rules and X.509 certificate rollover.',
+        steps: [
+          {
+            title: 'Inspect SAML Configuration under Global Settings > Login Configuration',
+            instruction: 'Navigate to Gear Icon > Global Settings > Login Configuration > SAML Tab to verify Entity ID, IdP SSO Service URL, and Assertion Consumer Service (ACS) endpoints.',
+            image: IMAGE_BASE + 'Gemini_Generated_Image_xgadotxgadotxgad.jpeg'
+          },
+          {
+            title: 'Validate SAML Correlation Rule Mapping (nameId -> Cube)',
+            instruction: 'Confirm the SAML Correlation Rule resolves the incoming SAML NameID or employeeNumber attribute to an active sailpoint.object.Identity record.',
+            image: ''
+          },
+          {
+            title: 'Rotate Public X.509 Signing Certificate Prior to Expiry',
+            instruction: 'Paste the updated PEM-formatted X.509 certificate into the IdP Public Certificate field during the scheduled maintenance window at least 14 days before expiry.',
+            image: ''
+          }
+        ]
+      },
+      {
+        id: 'PDF-09',
+        num: '09',
+        category: 'Application Onboarding',
+        role: 'Application Owners',
+        title: 'Service Account & Non-Human Identity (NHI) Governance in IIQ',
+        shortTask: 'Classify service accounts and assign human Custodian owners in IIQ',
+        pdfFilename: 'IIQ-APP-09-Service-Account-Governance-Guide.pdf',
+        flowGuideUrl: FLOW_BASE + 'IAM%20Joiner%20Process%20Slide%20-%20Kimi.html',
+        iiqModuleLabel: 'Open Account Groups',
+        iiqJsfPath: IIQ_CONTEXT_PATH + '/define/groups/accountGroups.jsf',
+        summary: 'Procedures for registering non-human service accounts (svc-*), correlating them to a Service Identity Cube or Application Owner in IdentityIQ, and certifying them during quarterly reviews.',
+        steps: [
+          {
+            title: 'Register Service Account Naming & Primary/Backup Custodian',
+            instruction: 'Ensure the account follows svc-[appcode]-[env]-[purpose] and has an active full-time employee assigned as Custodian on its IdentityIQ Cube or Link.',
+            image: IMAGE_BASE + 'Gemini_Generated_Image_xgadotxgadotxgad.jpeg'
+          },
+          {
+            title: 'Mark Account Link as serviceAccount = true in IIQ',
+            instruction: 'Set the Link Extended Attribute isServiceAccount = true and specify the PAM Safe path where the rotating credential is stored.',
+            image: ''
+          },
+          {
+            title: 'Re-Certify Service Account Ownership Every Quarter',
+            instruction: 'During the quarterly Service Account Certification campaign, verify the account is still required by an active pipeline and sign off in Access Reviews.',
+            image: ''
+          }
+        ]
+      },
+      {
+        id: 'PDF-10',
+        num: '10',
+        category: 'Contingent Workers',
+        role: 'Line Managers',
+        title: 'Contingent Worker Onboarding & Sponsor Lifecycle Guide in IIQ',
+        shortTask: 'Onboard a new contractor or consultant via VMS and IIQ Rapid Setup',
+        pdfFilename: 'IIQ-CWK-10-Contingent-Worker-Onboarding-Manual.pdf',
+        flowGuideUrl: FLOW_BASE + 'identity-change-flow.html',
+        iiqModuleLabel: 'Open Identity Warehouse',
+        iiqJsfPath: IIQ_CONTEXT_PATH + '/define/identity/identities.jsf',
+        summary: 'Step-by-step handbook for Line Manager Sponsors onboarding external contractors (CW-* / .ext), detailing VMS aggregation into IdentityIQ, Joiner birthright provisioning, and project role requests.',
+        steps: [
+          {
+            title: 'Submit Contractor Profile in VMS with Mandatory Contract End Date',
+            instruction: 'Create the contractor profile in the Vendor Management System (VMS) at least 5 business days before start date, ensuring Cost Center, NDA status, and Contract End Date (max 180 days) are populated.',
+            image: IMAGE_BASE + 'Gemini_Generated_Image_xgadotxgadotxgad.jpeg'
+          },
+          {
+            title: 'Approve Day-One Activation Work Item & Distribute MFA Guide',
+            instruction: 'Open QuickLinks > My Tasks > Work Items to approve the Sponsor Activation confirmation and provide the contractor with their initial login instructions.',
+            image: ''
+          },
+          {
+            title: 'Request Project-Specific Roles in Manage User Access with Sunset Date',
+            instruction: 'Open Manage User Access, select the contractor’s Identity Cube, add required project roles, and set the Sunset Date to match their VMS Contract End Date.',
+            image: ''
+          }
+        ]
+      },
+      {
+        id: 'PDF-11',
+        num: '11',
+        category: 'Contingent Workers',
+        role: 'Line Managers',
+        title: '90-Day Inactivity Auto-Disablement & Contractor Reactivation in IIQ',
+        shortTask: 'Reactivate a contractor account disabled for dormancy or contract expiry',
+        pdfFilename: 'IIQ-CWK-11-Contractor-Reactivation-Playbook.pdf',
+        flowGuideUrl: FLOW_BASE + 'signal_dashboard.html',
+        iiqModuleLabel: 'Launch Manage User Access',
+        iiqJsfPath: IIQ_CONTEXT_PATH + '/accessRequest/accessRequest.jsf',
+        summary: 'Details the automated Contingent Worker Account Control Policy enforced by IdentityIQ (30-day inactivity suspension, 90-day entitlement revocation, and contract end-date disablement) and Sponsor reactivation steps.',
+        steps: [
+          {
+            title: 'Inspect Disablement Trigger on the Contractor Identity Cube',
+            instruction: 'Open IdentityIQ > Define > Identities (or QuickLinks > View Identity), locate CW-XXXXXX, and check whether inactiveReason is "Contract End Date Reached" or "30/90-Day Dormancy Policy".',
+            image: IMAGE_BASE + 'Gemini_Generated_Image_xgadotxgadotxgad.jpeg'
+          },
+          {
+            title: 'Extend VMS Assignment End Date (If Contract Expired)',
+            instruction: 'If the VMS Contract End Date has passed, submit an extension in VMS first and allow 2 hours for the IdentityIQ VMS Aggregation task to update the Identity Cube.',
+            image: ''
+          },
+          {
+            title: 'Submit QuickLinks > Lifecycle Actions > Enable Contingent Worker',
+            instruction: 'Open QuickLinks > Lifecycle Actions > Enable Contingent Worker, select the contractor, enter your Sponsor attestation note, and re-request roles if dormancy exceeded 90 days.',
+            image: ''
+          }
+        ]
+      },
+      {
+        id: 'PDF-12',
+        num: '12',
+        category: 'Contingent Workers',
+        role: 'Line Managers',
+        title: 'Emergency Contractor Offboarding (Rapid Setup Leaver) & Sponsor Transfer',
+        shortTask: 'Immediately terminate a departing contractor or transfer sponsorship in IIQ',
+        pdfFilename: 'IIQ-CWK-12-RapidSetup-Leaver-Offboarding-Manual.pdf',
+        flowGuideUrl: FLOW_BASE + 'IAM%20Joiner%20Process%20Slide%20-%20Kimi.html',
+        iiqModuleLabel: 'Open IIQ Work Items',
+        iiqJsfPath: IIQ_CONTEXT_PATH + '/workitem/workItems.jsf',
+        summary: 'Critical procedure for triggering immediate <15-minute access revocation via IdentityIQ Rapid Setup Terminate Identity ("Emergency Kill-Switch") when a contractor concludes early, or transferring sponsorship.',
+        steps: [
+          {
+            title: 'Launch QuickLinks > Lifecycle Actions > Terminate / Offboard Identity',
+            instruction: 'For immediate contractor departure, open QuickLinks > Lifecycle Actions > Terminate Identity (Rapid Setup Leaver), select the contractor, and click "Submit Immediate Termination".',
+            image: IMAGE_BASE + 'Gemini_Generated_Image_xgadotxgadotxgad.jpeg'
+          },
+          {
+            title: 'Complete Physical Asset & Badge Return Work Item (IIQ-FRM-12)',
+            instruction: 'Open QuickLinks > My Tasks > Work Items to sign off the generated Manager Offboarding Checklist Work Item and attach Form IIQ-FRM-12.',
+            image: ''
+          },
+          {
+            title: 'Transfer Contractor Sponsorship Before Manager Mobility',
+            instruction: 'If you are changing roles or departments, use QuickLinks > Lifecycle Actions > Transfer Contractor Sponsor to reassign your active contingent workers to a peer manager.',
+            image: ''
+          }
+        ]
+      }
+    ];
+
+    const CATEGORIES = [
+      'All Guides',
+      'Access & Provisioning',
+      'Security & Privileged IDs',
+      'Application Onboarding',
+      'Contingent Workers'
+    ];
+
+    /*************************************************************************
+     * 2. PRE-COMPUTED SEARCH INDEX & GUIDE MAP (O(1) Lookup, <0.2ms Filter)
+     *************************************************************************/
+    const GUIDE_MAP = new Map();
+
+    HELP_GUIDES.forEach(function(g) {
+      g.serverPdfUrl = SERVER_PDF_BASE + g.pdfFilename;
+      g._searchIndex = [
+        g.id,
+        g.num,
+        g.category,
+        g.role,
+        g.title,
+        g.shortTask,
+        g.pdfFilename,
+        g.iiqJsfPath,
+        g.summary,
+        g.steps.map(function(s) { return s.title + ' ' + s.instruction; }).join(' ')
+      ].join(' ').toLowerCase();
+      GUIDE_MAP.set(g.id, g);
+    });
+
+    /*************************************************************************
+     * 3. WORKBENCH STATE & LOCALSTORAGE PERSISTENCE
+     *************************************************************************/
+    const STORAGE_KEY = 'iiq_help_workbench_v1';
+
+    const state = {
+      activeGuideId: 'PDF-01',
+      activeCategory: 'All Guides',
+      searchQuery: '',
+      focusMode: false,
+      mobileTab: 'walkthrough',
+      openSteps: {},
+      savedSessionGuideId: null
+    };
+
+    function loadPersistedState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object' && parsed.lastGuideId && GUIDE_MAP.has(parsed.lastGuideId)) {
+            state.savedSessionGuideId = parsed.lastGuideId;
+          }
+        }
+      } catch (e) {}
+      applyUrlHashState();
+    }
+
+    function savePersistedState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          lastGuideId: state.activeGuideId,
+          updatedAt: Date.now()
+        }));
+      } catch (e) {}
+    }
+
+    /* Deep links: #guide=PDF-06 opens a guide; #guide=PDF-06&step=2 also expands step 2. */
+    function applyUrlHashState() {
+      const hash = window.location.hash.replace(/^#/, '');
+      if (!hash) return false;
+      const params = new URLSearchParams(hash.indexOf('=') !== -1 ? hash : 'guide=' + hash);
+      const gId = params.get('guide') || hash.split('&')[0];
+      const stepParam = parseInt(params.get('step'), 10);
+
+      if (gId && GUIDE_MAP.has(gId)) {
+        state.activeGuideId = gId;
+        state.openSteps = {};
+        const g = GUIDE_MAP.get(gId);
+        if (!isNaN(stepParam) && stepParam >= 1 && stepParam <= g.steps.length) {
+          state.openSteps[stepParam - 1] = true;
+        }
+        return true;
+      }
+      return false;
+    }
+
+    function syncUrlHash() {
+      const targetHash = '#guide=' + state.activeGuideId;
+      if (window.location.hash !== targetHash) {
+        history.replaceState(null, '', targetHash);
+      }
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function getFilteredGuides() {
+      const q = state.searchQuery.trim().toLowerCase();
+      return HELP_GUIDES.filter(function(g) {
+        if (state.activeCategory !== 'All Guides' && g.category !== state.activeCategory) {
+          return false;
+        }
+        if (q && g._searchIndex.indexOf(q) === -1) {
+          return false;
+        }
+        return true;
+      });
+    }
+
+    /*************************************************************************
+     * 4. DOM RENDERERS
+     *************************************************************************/
+    function renderCategoryBar() {
+      const container = document.getElementById('categoryFilterContainer');
+      container.innerHTML = CATEGORIES.map(function(cat) {
+        const count = cat === 'All Guides'
+          ? HELP_GUIDES.length
+          : HELP_GUIDES.filter(function(g) { return g.category === cat; }).length;
+        const isActive = state.activeCategory === cat;
+        return (
+          '<button type="button" data-action="select-category" data-category="' + cat + '" class="cat-pill ' + (isActive ? 'active' : '') + '">' +
+            '<span>' + cat + '</span>' +
+            '<span class="cat-pill-count t-num">' + count + '</span>' +
+          '</button>'
+        );
+      }).join('');
+    }
+
+    /* Category bar overflow: toggles edge fades/arrows, and keeps the active pill in view. */
+    function updateCatOverflow() {
+      const list = document.getElementById('categoryFilterContainer');
+      const wrap = document.getElementById('catScroller');
+      if (!list || !wrap) return;
+      const maxScroll = list.scrollWidth - list.clientWidth;
+      wrap.classList.toggle('can-left', list.scrollLeft > 2);
+      wrap.classList.toggle('can-right', maxScroll - list.scrollLeft > 2);
+    }
+
+    function scrollActiveCatIntoView() {
+      const list = document.getElementById('categoryFilterContainer');
+      const pill = list && list.querySelector('.cat-pill.active');
+      if (!pill || list.scrollWidth <= list.clientWidth) return;
+      const pad = 48;
+      if (pill.offsetLeft - pad < list.scrollLeft) {
+        list.scrollLeft = Math.max(0, pill.offsetLeft - pad);
+      } else if (pill.offsetLeft + pill.offsetWidth + pad > list.scrollLeft + list.clientWidth) {
+        list.scrollLeft = pill.offsetLeft + pill.offsetWidth + pad - list.clientWidth;
+      }
+    }
+
+    function initCatScroller() {
+      const list = document.getElementById('categoryFilterContainer');
+      let raf = 0;
+      const schedule = function() {
+        if (raf) return;
+        raf = requestAnimationFrame(function() { raf = 0; updateCatOverflow(); });
+      };
+      list.addEventListener('scroll', schedule, { passive: true });
+      if ('ResizeObserver' in window) {
+        new ResizeObserver(schedule).observe(list);
+      } else {
+        window.addEventListener('resize', schedule);
+      }
+      // Vertical mouse wheel scrolls the pill row sideways when it overflows.
+      list.addEventListener('wheel', function(e) {
+        if (list.scrollWidth <= list.clientWidth || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+        e.preventDefault();
+        list.scrollLeft += e.deltaY;
+      }, { passive: false });
+      updateCatOverflow();
+    }
+
+    function renderAllGuidesFooter() {
+      const container = document.getElementById('allGuidesFooter');
+      container.innerHTML = CATEGORIES.filter(function(c) { return c !== 'All Guides'; }).map(function(cat) {
+        const guides = HELP_GUIDES.filter(function(g) { return g.category === cat; });
+        return (
+          '<div>' +
+            '<div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#111111; padding-bottom:8px; margin-bottom:8px; border-bottom:2px solid #111111;">' + cat + '</div>' +
+            '<div style="display:flex; flex-direction:column; gap:6px;">' +
+              guides.map(function(g) {
+                return (
+                  '<a href="' + g.serverPdfUrl + '" target="_blank" rel="noopener" class="iiq-wb-guide-link" title="' + g.pdfFilename + '">' +
+                    '<span class="t-num" style="font-size:14px; font-weight:800; color:#E4002B; line-height:1.2;">' + g.num + '</span>' +
+                    '<span style="min-width:0; flex:1;">' +
+                      '<span style="display:block; font-size:12px; font-weight:700; color:#111111; line-height:1.35;">' + g.title + '</span>' +
+                      '<span style="display:block; font-size:10px; color:#71717A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + g.pdfFilename + '</span>' +
+                    '</span>' +
+                    '<span style="font-size:11px; font-weight:800; color:#111111;">PDF &#8599;</span>' +
+                  '</a>'
+                );
+              }).join('') +
+            '</div>' +
+          '</div>'
+        );
+      }).join('');
+    }
+
+    function renderLeftIndexRail() {
+      const filtered = getFilteredGuides();
+      const visibleCountEl = document.getElementById('visibleGuidesCount');
+      if (visibleCountEl) {
+        visibleCountEl.textContent = filtered.length + ' / ' + HELP_GUIDES.length + ' Guides';
+      }
+
+      const container = document.getElementById('guideListContainer');
+      if (!filtered.length) {
+        container.innerHTML =
+          '<div style="padding:28px 20px;">' +
+            '<div style="font-size:14px; font-weight:800; color:#111111; margin-bottom:4px;">No matching IIQ procedures</div>' +
+            '<p style="font-size:12px; color:#52525B; margin:0 0 12px 0;">No guide or /identityiq/help/ PDF matched your filter.</p>' +
+            '<button type="button" data-action="reset-filters" class="btn-red">Reset Filters</button>' +
+          '</div>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(function(g) {
+        const isSelected = g.id === state.activeGuideId;
+        return (
+          '<button type="button" data-action="select-guide" data-guide-id="' + g.id + '" role="option" aria-selected="' + isSelected + '" class="rail-item ' + (isSelected ? 'active' : '') + '">' +
+            '<span class="rail-num t-num">' + g.num + '</span>' +
+            '<div style="min-width:0; flex:1;">' +
+              '<div class="rail-file">' + g.pdfFilename + '</div>' +
+              '<div class="rail-title">' + g.title + '</div>' +
+              '<div class="rail-role">' + g.role + '</div>' +
+            '</div>' +
+          '</button>'
+        );
+      }).join('');
+    }
+
+    /* Switching guides only flips the selected row; the list is not rebuilt. */
+    function updateRailSelection() {
+      const rows = document.querySelectorAll('#guideListContainer .rail-item');
+      for (let i = 0; i < rows.length; i++) {
+        const isSelected = rows[i].getAttribute('data-guide-id') === state.activeGuideId;
+        rows[i].classList.toggle('active', isSelected);
+        rows[i].setAttribute('aria-selected', String(isSelected));
+      }
+    }
+
+    function renderCenterWalkthroughPane() {
+      const guide = GUIDE_MAP.get(state.activeGuideId) || HELP_GUIDES[0];
+
+      const pane = document.getElementById('paneWalkthrough');
+      pane.innerHTML =
+        '<!-- Guide Top Bar: Simple Tags + Full Doc / Flow Guide / Module Links -->' +
+        '<div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; padding-bottom:14px; margin-bottom:18px; border-bottom:1px solid #E5E5E7;">' +
+          '<div style="display:flex; flex-wrap:wrap; align-items:center; gap:6px;">' +
+            '<span class="badge-red t-num">' + guide.id + '</span>' +
+            '<span class="badge-neutral">' + guide.category + '</span>' +
+          '</div>' +
+          '<div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px;">' +
+            '<a href="' + guide.serverPdfUrl + '" target="_blank" rel="noopener" class="btn-outline" style="padding:6px 12px; font-size:10px;" title="Open full guide: ' + guide.pdfFilename + '">' +
+              '<span>Full Guide (PDF)</span>' +
+              '<span>&#8599;</span>' +
+            '</a>' +
+            (guide.flowGuideUrl ? (
+              '<button type="button" data-action="open-flow" class="btn-outline" style="padding:6px 12px; font-size:10px;" title="Open the visual flow guide for this procedure">' +
+                '<span>Visual Flow Guide</span>' +
+                '<span>&#9654;</span>' +
+              '</button>'
+            ) : '') +
+            '<a href="' + guide.iiqJsfPath + '" class="btn-red" style="padding:6px 12px; font-size:10px;" title="Open ' + guide.iiqJsfPath + '">' +
+              '<span>' + guide.iiqModuleLabel + '</span>' +
+              '<span>&#8599;</span>' +
+            '</a>' +
+          '</div>' +
+        '</div>' +
+
+        '<!-- Guide Headline & Summary -->' +
+        '<div style="margin-bottom:24px;">' +
+          '<h1 style="font-size:24px; font-weight:800; color:#111111; letter-spacing:-0.02em; line-height:1.2; margin:0 0 8px 0;">' +
+            guide.title +
+          '</h1>' +
+          '<p style="font-size:13px; color:#52525B; margin:0; line-height:1.6;">' +
+            guide.summary +
+          '</p>' +
+        '</div>' +
+
+        '<!-- Step List Header + Expand/Collapse All -->' +
+        '<div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;">' +
+          '<span style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#111111;">' +
+            'Step-by-Step Instructions' +
+          '</span>' +
+          '<div style="display:flex; align-items:center; gap:6px;">' +
+            '<button type="button" data-action="expand-all-steps" class="btn-subtle">Expand All</button>' +
+            '<button type="button" data-action="collapse-all-steps" class="btn-subtle">Collapse All</button>' +
+          '</div>' +
+        '</div>' +
+
+        '<!-- Collapsible Steps -->' +
+        '<div id="stepsListContainer">' +
+          guide.steps.map(function(step, idx) {
+            const isOpen = Boolean(state.openSteps[idx]);
+            const stepNo = String(idx + 1).padStart(2, '0');
+            return (
+              '<article class="step-card ' + (isOpen ? 'is-open' : '') + '" data-step-card="' + idx + '">' +
+                '<button type="button" class="step-head" data-action="toggle-step" data-step-idx="' + idx + '" aria-expanded="' + isOpen + '" aria-controls="stepBody' + idx + '">' +
+                  '<span style="min-width:0; flex:1;">' +
+                    '<span class="step-num t-num">Step ' + stepNo + '</span>' +
+                    '<span class="step-title">' + step.title + '</span>' +
+                  '</span>' +
+                  '<span class="step-chevron" aria-hidden="true"></span>' +
+                '</button>' +
+                '<div class="step-body" id="stepBody' + idx + '" role="region" aria-hidden="' + !isOpen + '">' +
+                  '<div class="step-body-inner">' +
+                    '<div class="step-body-content">' +
+                      '<p>' + step.instruction + '</p>' +
+                      (step.image ? (
+                        '<figure class="step-figure">' +
+                          '<img data-step-img src="' + escapeHtml(step.image) + '" alt="' + escapeHtml('Step ' + stepNo + ': ' + step.title) + '" decoding="async" />' +
+                        '</figure>'
+                      ) : '') +
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+              '</article>'
+            );
+          }).join('') +
+        '</div>';
+    }
+
+    /*************************************************************************
+     * 5. STEP EXPAND / COLLAPSE
+     *************************************************************************/
+    function setStepOpen(idx, open) {
+      const card = document.querySelector('[data-step-card="' + idx + '"]');
+      if (!card) return;
+      state.openSteps[idx] = open;
+      card.classList.toggle('is-open', open);
+      card.querySelector('.step-head').setAttribute('aria-expanded', String(open));
+      card.querySelector('.step-body').setAttribute('aria-hidden', String(!open));
+    }
+
+    function setAllStepsOpen(open) {
+      const guide = GUIDE_MAP.get(state.activeGuideId) || HELP_GUIDES[0];
+      guide.steps.forEach(function(_, idx) { setStepOpen(idx, open); });
+    }
+
+    /*************************************************************************
+     * 5b. VISUAL FLOW GUIDE POP-UP
+     *************************************************************************/
+    let flowReturnFocus = null;
+
+    function openFlowModal() {
+      const guide = GUIDE_MAP.get(state.activeGuideId);
+      if (!guide || !guide.flowGuideUrl) return;
+      flowReturnFocus = document.activeElement;
+      document.getElementById('flowModalTitle').textContent = guide.id + ' \u2022 ' + guide.title;
+      document.getElementById('flowModalNewTab').href = guide.flowGuideUrl;
+      document.getElementById('flowModalFrame').src = guide.flowGuideUrl;
+      document.getElementById('flowModal').classList.remove('hidden');
+      document.body.classList.add('modal-open');
+      document.getElementById('flowModalClose').focus();
+    }
+
+    function closeFlowModal() {
+      document.getElementById('flowModal').classList.add('hidden');
+      document.getElementById('flowModalFrame').src = 'about:blank';
+      document.body.classList.remove('modal-open');
+      if (flowReturnFocus && document.body.contains(flowReturnFocus)) flowReturnFocus.focus();
+      flowReturnFocus = null;
+    }
+
+    function updateGlobalAndMobileBars() {
+      const guide = GUIDE_MAP.get(state.activeGuideId) || HELP_GUIDES[0];
+
+      document.getElementById('mobileActiveCode').textContent = guide.id;
+      document.getElementById('mobileActiveTitle').textContent = guide.title;
+
+      const mobPdfLink = document.getElementById('mobileQuickPdfLink');
+      mobPdfLink.href = guide.serverPdfUrl;
+      mobPdfLink.textContent = 'Full PDF ↗';
+
+      const supportLink = document.getElementById('supportEmailLink');
+      if (supportLink) {
+        supportLink.href = 'mailto:support@iiq.com?subject=' + encodeURIComponent('IAMPRU Support: ' + guide.id + ' ' + guide.title);
+      }
+    }
+
+    function applyMobileTabVisibility() {
+      const pIndex = document.getElementById('paneIndex');
+      const pWalk = document.getElementById('paneWalkthrough');
+
+      pIndex.classList.toggle('mobile-pane-hidden', state.mobileTab !== 'index');
+      pWalk.classList.toggle('mobile-pane-hidden', state.mobileTab !== 'walkthrough');
+
+      const tabs = [
+        { id: 'mobTabIndex', key: 'index' },
+        { id: 'mobTabWalkthrough', key: 'walkthrough' }
+      ];
+      tabs.forEach(function(t) {
+        const btn = document.getElementById(t.id);
+        const active = state.mobileTab === t.key;
+        btn.style.background = active ? '#E4002B' : '#FFFFFF';
+        btn.style.color = active ? '#FFFFFF' : '#111111';
+      });
+    }
+
+    /*************************************************************************
+     * 6. DELEGATED EVENT DISPATCHER & KEYBOARD LISTENERS
+     *************************************************************************/
+    function selectGuide(guideId, switchMobileToWalkthrough) {
+      if (!GUIDE_MAP.has(guideId)) return;
+      state.activeGuideId = guideId;
+      state.openSteps = {};
+      if (switchMobileToWalkthrough && window.innerWidth < 1024) {
+        state.mobileTab = 'walkthrough';
+        applyMobileTabVisibility();
+      }
+      savePersistedState();
+      syncUrlHash();
+      updateRailSelection();
+      renderCenterWalkthroughPane();
+      updateGlobalAndMobileBars();
+    }
+
+    document.addEventListener('click', function(e) {
+      const actionEl = e.target.closest('[data-action]');
+      if (!actionEl) return;
+
+      const action = actionEl.getAttribute('data-action');
+
+      if (action === 'select-guide') {
+        const gId = actionEl.getAttribute('data-guide-id');
+        if (gId !== state.activeGuideId) selectGuide(gId, true);
+        else if (window.innerWidth < 1024) { state.mobileTab = 'walkthrough'; applyMobileTabVisibility(); }
+      } else if (action === 'select-category') {
+        state.activeCategory = actionEl.getAttribute('data-category');
+        renderCategoryBar();
+        renderLeftIndexRail();
+        scrollActiveCatIntoView();
+        updateCatOverflow();
+      } else if (action === 'cat-scroll') {
+        const list = document.getElementById('categoryFilterContainer');
+        const dir = parseInt(actionEl.getAttribute('data-dir'), 10) || 1;
+        list.scrollBy({ left: dir * Math.max(160, list.clientWidth * 0.7) });
+      } else if (action === 'toggle-step') {
+        const idx = parseInt(actionEl.getAttribute('data-step-idx'), 10);
+        if (!isNaN(idx)) setStepOpen(idx, !state.openSteps[idx]);
+      } else if (action === 'expand-all-steps') {
+        setAllStepsOpen(true);
+      } else if (action === 'collapse-all-steps') {
+        setAllStepsOpen(false);
+      } else if (action === 'open-flow') {
+        openFlowModal();
+      } else if (action === 'close-flow') {
+        closeFlowModal();
+      } else if (action === 'switch-mobile-tab') {
+        state.mobileTab = actionEl.getAttribute('data-tab');
+        applyMobileTabVisibility();
+      } else if (action === 'clear-search' || action === 'reset-filters') {
+        state.searchQuery = '';
+        state.activeCategory = 'All Guides';
+        document.getElementById('searchInput').value = '';
+        document.getElementById('clearSearchBtn').classList.add('hidden');
+        renderCategoryBar();
+        renderLeftIndexRail();
+        scrollActiveCatIntoView();
+        updateCatOverflow();
+      } else if (action === 'resume-session') {
+        if (state.savedSessionGuideId) {
+          selectGuide(state.savedSessionGuideId, true);
+        }
+        document.getElementById('resumeBanner').classList.add('hidden');
+      } else if (action === 'dismiss-resume') {
+        document.getElementById('resumeBanner').classList.add('hidden');
+      }
+    });
+
+    document.addEventListener('error', function(e) {
+      const t = e.target;
+      if (t && t.tagName === 'IMG' && t.hasAttribute('data-step-img')) {
+        const fig = t.closest('.step-figure');
+        if (fig) fig.remove();
+      }
+    }, true);
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const hadUrlHash = window.location.hash.length > 1;
+      loadPersistedState();
+
+      if (!hadUrlHash && state.savedSessionGuideId && state.savedSessionGuideId !== 'PDF-01') {
+        const savedGuide = GUIDE_MAP.get(state.savedSessionGuideId);
+        if (savedGuide) {
+          document.getElementById('resumeBannerText').textContent =
+            'Last viewed ' + savedGuide.id + ': "' + savedGuide.title + '".';
+          document.getElementById('resumeBanner').classList.remove('hidden');
+        }
+      }
+
+      const searchInput = document.getElementById('searchInput');
+      let searchTimer = 0;
+      searchInput.addEventListener('input', function(e) {
+        state.searchQuery = e.target.value;
+        document.getElementById('clearSearchBtn').classList.toggle('hidden', !state.searchQuery);
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(renderLeftIndexRail, 120);
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (['INPUT', 'TEXTAREA'].indexOf(document.activeElement.tagName) !== -1) {
+          if (e.key === 'Escape') document.activeElement.blur();
+          return;
+        }
+        if (e.key === '/') {
+          e.preventDefault();
+          searchInput.focus();
+        } else if (e.key === '[') {
+          e.preventDefault();
+          state.focusMode = !state.focusMode;
+          document.body.classList.toggle('focus-mode', state.focusMode);
+        }
+      });
+
+      renderCategoryBar();
+      initCatScroller();
+      renderLeftIndexRail();
+      renderCenterWalkthroughPane();
+      renderAllGuidesFooter();
+      updateGlobalAndMobileBars();
+      applyMobileTabVisibility();
+    });
+    //]]>
+  </script>
+</body>
+</html>
